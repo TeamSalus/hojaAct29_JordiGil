@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open Trivial Game</title>
+    <script src="./view/plugins/handlebars.runtime-v4.7.6.js"></script>
+    <script src="./view/precompiled/preguntas.precompiled.js"></script>
+    <script src="./view/view.js"></script>
+    <script src="./model/model.js"></script>
+    <script src="index.js" async></script>
+    <link rel="stylesheet" href="./view//css/style.css" />
+  </head>
+  <body>
+    <div class="main">
+      <h1>Open Trivia Game</h1>
+      <div class="puntuacion">
+        <div class="puntuacion__preguntas">
+          <p class="puntuacion__numeroPregunta" id="numeroPregunta">34</p>
+          <p class="puntuacion__numeroPregunta">Pregunta</p>
+        </div>
+
+        <p class="puntuacion__tiempo">60</p>
+        <div class="puntuacion__logros">
+          <p class="puntuacion__categoria">1/10</p>
+          <p class="puntuacion__categoria">Logros</p>
+        </div>
+      </div>
+      <div id="preguntas" class="preguntas"></div>
+    </div>
+  </body>
+</html>
