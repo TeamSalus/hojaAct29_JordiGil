@@ -42,7 +42,7 @@ templates['preguntas.hbs'] = template({"1":function(container,depth0,helpers,par
     + ((stack1 = ((helper = (helper = lookupProperty(helpers,"category") || (depth0 != null ? lookupProperty(depth0,"category") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"category","hash":{},"data":data,"loc":{"start":{"line":2,"column":50},"end":{"line":2,"column":64}}}) : helper))) != null ? stack1 : "")
     + "</p>\r\n    <div class=\"pregunta__titulo\">\r\n        <p id=\"pregunta\" class=\"pregunta__titulo__nombre\">"
     + ((stack1 = ((helper = (helper = lookupProperty(helpers,"question") || (depth0 != null ? lookupProperty(depth0,"question") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"question","hash":{},"data":data,"loc":{"start":{"line":4,"column":58},"end":{"line":4,"column":72}}}) : helper))) != null ? stack1 : "")
-    + "</p>\r\n    </div>\r\n</div>\r\n<div class=\"respuestas\">\r\n"
+    + "</p>\r\n    </div>\r\n</div>\r\n<div id=\"respuestas\" class=\"respuestas\">\r\n"
     + ((stack1 = lookupProperty(helpers,"if").call(alias1,(depth0 != null ? lookupProperty(depth0,"trueFalse") : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data,"loc":{"start":{"line":8,"column":4},"end":{"line":22,"column":7}}})) != null ? stack1 : "");
 },"useData":true});
 })();
