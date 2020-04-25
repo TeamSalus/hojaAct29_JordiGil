@@ -6,7 +6,6 @@ const main = async () => {
     MEDIUM: 'medium',
     HARD: 'hard',
   };
-
   controller.gameInit();
   controller.userInit(difficulty.EASY);
   controller.renderQuestion();

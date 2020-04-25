@@ -8,6 +8,14 @@ const difficulty = {
   RANDOM: '',
 };
 
+const setRunning = () => {
+  localStorage.setItem('TriviaRunning', true);
+};
+
+const setTotalCategories = (totalCategories) => {
+  localStorage.setItem('TriviaTotalCategories', totalCategories);
+};
+
 const saveCategories = (categories) =>
   localStorage.setItem('triviaCategories', JSON.stringify(categories));
 
@@ -36,9 +44,50 @@ const setNextLevel = () => {
   setLevel(nextLevel);
 };
 
+const saveProgress = () => {
+  const preguntasAcertadas = document.getElementById('preguntasAcertadas').textContent;
+  const preguntasRespondidas = document.getElementById('preguntasRespondidas').textContent;
+  const logrosConseguidos = document.getElementById('logrosConseguidos').textContent;
+
+  localStorage.setItem('TriviaPreguntasAcertadas', preguntasAcertadas);
+  localStorage.setItem('TriviapreguntasRespondidas', preguntasRespondidas);
+  localStorage.setItem('TrivialogrosConseguidos', logrosConseguidos);
+};
+
+const resetGame = () => {
+  localStorage.removeItem('TriviaPreguntasAcertadas', preguntasAcertadas);
+  localStorage.removeItem('TriviapreguntasRespondidas', preguntasRespondidas);
+  localStorage.removeItem('TrivialogrosConseguidos', logrosConseguidos);
+  localStorage.removeItem('TriviaRunning', false);
+};
+
+const isGameRunning = () => localStorage.getItem('TriviaRunning');
+
+const getProgress = () => {
+  const preguntasAcertadas = localStorage.getItem('TriviaPreguntasAcertadas');
+  const preguntasRespondidas = localStorage.getItem('TriviapreguntasRespondidas');
+  const logrosConseguidos = localStorage.getItem('TrivialogrosConseguidos');
+  const logrosDisponibles = localStorage.getItem('TriviaTotalCategories');
+  const nivelSeleccionado = localStorage.getItem('TriviaDifficulty');
+
+  return {
+    preguntasAcertadas,
+    preguntasRespondidas,
+    logrosConseguidos,
+    logrosDisponibles,
+    nivelSeleccionado,
+  };
+};
+
 const game = {
   saveCategories,
   getSavedCategories,
   removeCategory,
   setNextLevel,
+  saveProgress,
+  resetGame,
+  isGameRunning,
+  getProgress,
+  setTotalCategories,
+  setRunning,
 };

@@ -3,15 +3,34 @@
 /* eslint-disable no-undef */
 
 const gameInit = async () => {
-  const { trivia_categories: categories } = await api.getCategories();
-  game.saveCategories(categories);
-  view.updateAvailableLogros(categories.length);
+  if (game.isGameRunning()) {
+    const {
+      preguntasAcertadas,
+      preguntasRespondidas,
+      logrosConseguidos,
+      logrosDisponibles,
+      nivelSeleccionado,
+    } = game.getProgress();
+    view.resumeMarcador(
+      preguntasAcertadas,
+      preguntasRespondidas,
+      logrosConseguidos,
+      logrosDisponibles,
+      nivelSeleccionado
+    );
+  } else {
+    const { trivia_categories: categories } = await api.getCategories();
+    game.saveCategories(categories);
+    game.setTotalCategories(categories.length);
+    game.setRunning();
+    view.updateAvailableLogros(categories.length);
+  }
 };
 
 const userInit = async (difficulty) => {
-  const token = user.getUserToken() ? user.getUserToken() : await api.getToken();
+  const token = user.getUserToken() === null ? await api.getToken() : user.getUserToken();
   user.setUserToken(token);
-  user.setUserDifficulty(difficulty);
+  if (user.getUserDifficulty() === null) user.setUserDifficulty(difficulty);
 };
 
 const tokenReset = async () => {
@@ -56,6 +75,7 @@ const isLogroUnlocked = () => {
 
   if (listCategories.length === 1) {
     view.showVictory();
+    game.resetGame();
     return {
       gameOver: true,
     };
@@ -78,7 +98,7 @@ const isAnswer = async ({ target }) => {
   if (gameOver) return;
 
   view.updateMarcador(isAcertada, isLogro);
-
+  game.saveProgress();
   const preload = preloadQuestion(user.getUserDifficulty());
 
   const notificacion = isAcertada

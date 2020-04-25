@@ -5,7 +5,7 @@
 /* eslint-disable no-unused-vars */
 
 const disableButtons = () => {
-  const buttons = document.querySelectorAll('button');
+  const buttons = document.querySelectorAll('.btnAnswer');
 
   [...buttons].forEach((button) => (button.disabled = true));
 };
@@ -23,6 +23,20 @@ const showQuestion = (pregunta) => {
 const updateAvailableLogros = (numeroCategorias) => {
   const logrosDisponibles = document.getElementById('logrosDisponibles');
   logrosDisponibles.textContent = numeroCategorias;
+};
+
+const resumeMarcador = (
+  preguntasAcertadas,
+  preguntasRespondidas,
+  logrosConseguidos,
+  logrosDisponibles,
+  nivelSeleccionado
+) => {
+  document.getElementById('preguntasAcertadas').textContent = preguntasAcertadas;
+  document.getElementById('preguntasRespondidas').textContent = preguntasRespondidas;
+  document.getElementById('logrosConseguidos').textContent = logrosConseguidos;
+  document.getElementById('logrosDisponibles').textContent = logrosDisponibles;
+  document.getElementById('btnNivel').textContent = nivelSeleccionado.toUpperCase();
 };
 
 const updateMarcador = (acertada, isLogro) => {
@@ -129,4 +143,5 @@ const view = {
   showVictory,
   resetMarcador,
   disableButtons,
+  resumeMarcador,
 };
