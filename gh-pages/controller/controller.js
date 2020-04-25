@@ -2,9 +2,16 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
-const userInit = async () => {
+const gameInit = async () => {
+  const { trivia_categories: categories } = await api.getCategories();
+  game.saveCategories(categories);
+  view.updateAvailableLogros(categories.length);
+};
+
+const userInit = async (difficulty) => {
   const token = user.getUserToken() ? user.getUserToken() : await api.getToken();
   user.setUserToken(token);
+  user.setUserDifficulty(difficulty);
 };
 
 const tokenReset = async () => {
@@ -16,6 +23,7 @@ const getNextQuestion = async (difficulty) => {
     difficulty,
     user.getUserToken('token')
   );
+
   respuestaCorrecta = pregunta[0].correct_answer;
 
   if (errorApi === 4) tokenReset(token);
@@ -23,13 +31,63 @@ const getNextQuestion = async (difficulty) => {
   return pregunta[0];
 };
 
-const renderQuestion = async (difficulty) => {
+const renderQuestion = async () => {
+  const difficulty = localStorage.getItem('TriviaDifficulty');
+
   let pregunta = await getNextQuestion(difficulty);
   pregunta = util.preparaPreguntaParaVista(pregunta);
+
   view.showQuestion(pregunta);
 };
 
-const isAnswer = ({ target }) => target.innerHTML === respuestaCorrecta;
+const preloadQuestion = async (difficulty) => {
+  let pregunta = await getNextQuestion(difficulty);
+
+  pregunta = util.preparaPreguntaParaVista(pregunta);
+  return pregunta;
+};
+
+const isLogroUnlocked = () => {
+  const categoria = document.getElementById('categoria').textContent;
+  let listCategories = game.getSavedCategories();
+
+  const isCategoriaUnlocked = listCategories.find((_categoria) => _categoria.name === categoria);
+  if (isCategoriaUnlocked === undefined) return { isLogro: false };
+
+  if (listCategories.length === 1) {
+    view.showVictory();
+    return {
+      gameOver: true,
+    };
+  }
+
+  game.removeCategory(categoria, listCategories);
+
+  return {
+    isLogro: true,
+    categoria,
+  };
+};
+
+const isAnswer = async ({ target }) => {
+  view.disableButtons();
+  const isAcertada = target.innerHTML === respuestaCorrecta;
+
+  const { gameOver, isLogro, categoria } = isAcertada ? isLogroUnlocked() : false;
+
+  if (gameOver) return;
+
+  view.updateMarcador(isAcertada, isLogro);
+
+  const preload = preloadQuestion(user.getUserDifficulty());
+
+  const notificacion = isAcertada
+    ? view.showSuccess(isLogro, categoria)
+    : view.showFail(respuestaCorrecta);
+  const nextQuestion = [await preload, await notificacion][0];
+
+  view.showQuestion(nextQuestion);
+};
 
 const controller = {
   userInit,
@@ -37,4 +95,6 @@ const controller = {
   getNextQuestion,
   renderQuestion,
   isAnswer,
+  preloadQuestion,
+  gameInit,
 };

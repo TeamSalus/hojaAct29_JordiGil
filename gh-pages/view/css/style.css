@@ -9,8 +9,9 @@
 body {
   background: linear-gradient(#7a66b0, rgb(50, 42, 73));
   color: white;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   margin: 0 1em;
+  text-align: center;
 }
 
 .main {
@@ -23,6 +24,7 @@ body {
 h1 {
   margin-top: 1em;
   text-align: center;
+  color: whitesmoke;
 }
 
 .puntuacion {
@@ -31,6 +33,15 @@ h1 {
   align-items: center;
   text-align: center;
   margin: 2em 0;
+  color: whitesmoke;
+}
+
+.puntuacion__nivel {
+  color: whitesmoke;
+  background-color: darkmagenta;
+  border: none;
+  padding: 0.5em;
+  width: 10em;
 }
 
 .preguntas {
@@ -42,12 +53,14 @@ h1 {
 .pregunta {
   display: flex;
   flex-direction: column;
-  height: 50%;
+  height: fit-content;
 }
 
 .pregunta__categoria {
   text-align: center;
   background-color: darkcyan;
+  font-size: 1rem;
+  padding: 0.1em 0;
 }
 
 .pregunta__titulo {
@@ -62,24 +75,32 @@ h1 {
   color: grey;
   text-align: center;
   font-weight: 700;
-  font-size: 1.5em;
+  font-size: 1.25em;
   margin: auto;
+  padding: 1em 0.5em;
 }
 
 .respuestas {
-  margin: auto 0;
+  flex: 1;
 }
 
 .btnAnswer {
-  margin: 0.5em auto;
-  font-size: 1.5em;
+  font-size: 1rem;
   width: 100%;
+  padding: 0.5em;
+}
+.disableButtons {
+  cursor: none;
 }
 .respuestas__multiples,
 .respuestas__trueFalse {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-content: center;
   flex-direction: column;
-  margin: 2em 0;
+  height: 100%;
+}
+.copy {
+  font-size: 0.5rem;
+  margin-left: auto;
 }
