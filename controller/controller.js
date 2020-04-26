@@ -14,7 +14,7 @@ const gameInit = async () => {
 };
 
 const userInit = async (difficulty = 'easy') => {
-  const token = user.getUserToken() === null ? await api.getToken() : user.getUserToken();
+  const token = user.getUserToken() || (await api.getToken());
   user.setUserToken(token);
   if (user.getUserDifficulty() === null) user.setUserDifficulty(difficulty);
 };
