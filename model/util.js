@@ -12,16 +12,16 @@ const randomizeAnswers = (answers) =>
 const preparaPreguntaParaVista = (question) => {
   let answers = [...question.incorrect_answers, question.correct_answer];
   answers = randomizeAnswers(answers);
-  const trueFalse = question.type === 'boolean';
+  const trueFalse = atob(question.type) === 'boolean';
   return {
-    category: question.category,
+    category: atob(question.category),
     trueFalse,
-    difficulty: question.difficulty,
-    question: question.question,
-    answer1: answers[0],
-    answer2: answers[1],
-    answer3: trueFalse ? null : answers[2],
-    answer4: trueFalse ? null : answers[3],
+    difficulty: atob(question.difficulty),
+    question: atob(question.question),
+    answer1: atob(answers[0]),
+    answer2: atob(answers[1]),
+    answer3: trueFalse ? null : atob(answers[2]),
+    answer4: trueFalse ? null : atob(answers[3]),
   };
 };
 

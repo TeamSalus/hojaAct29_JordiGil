@@ -1,6 +1,4 @@
-const setUserDifficulty = (difficulty) => {
-  localStorage.setItem('TriviaDifficulty', difficulty);
-};
+const setUserDifficulty = (difficulty) => localStorage.setItem('TriviaDifficulty', difficulty);
 
 const getUserDifficulty = () => localStorage.getItem('TriviaDifficulty');
 

@@ -29,13 +29,13 @@ const resumeMarcador = ({
   preguntasAcertadas,
   preguntasRespondidas,
   logrosConseguidos,
-  logrosDisponibles,
+  totalCategories,
   nivelSeleccionado,
 }) => {
   document.getElementById('preguntasAcertadas').textContent = preguntasAcertadas || 0;
   document.getElementById('preguntasRespondidas').textContent = preguntasRespondidas || 0;
   document.getElementById('logrosConseguidos').textContent = logrosConseguidos || 0;
-  document.getElementById('logrosDisponibles').textContent = logrosDisponibles;
+  document.getElementById('logrosDisponibles').textContent = totalCategories;
   document.getElementById('btnNivel').textContent = (nivelSeleccionado || 'RANDOM').toUpperCase();
 };
 

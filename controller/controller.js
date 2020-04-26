@@ -3,12 +3,15 @@
 /* eslint-disable no-undef */
 
 const gameInit = async () => {
+  if (localStorage.getItem('TriviaVersion') !== game.versionActual) resetGame();
   if (game.isGameRunning()) view.resumeMarcador(game.getProgress());
   else {
     const { trivia_categories: categories } = await api.getCategories();
+    game.saveVersion(game.versionActual);
     game.saveCategories(categories);
     game.setTotalCategories(categories.length);
     game.setRunning();
+    game.saveProgress();
     view.updateAvailableLogros(categories.length);
   }
 };
@@ -29,7 +32,7 @@ const getNextQuestion = async (difficulty) => {
     user.getUserToken('token')
   );
 
-  respuestaCorrecta = pregunta[0].correct_answer;
+  game.setCorrectAnswer(pregunta[0].correct_answer);
 
   if (errorApi === 4) tokenReset(token);
 
@@ -37,7 +40,7 @@ const getNextQuestion = async (difficulty) => {
 };
 
 const renderQuestion = async () => {
-  const difficulty = localStorage.getItem('TriviaDifficulty');
+  const difficulty = user.getUserDifficulty();
 
   let pregunta = await getNextQuestion(difficulty);
   pregunta = util.preparaPreguntaParaVista(pregunta);
@@ -77,6 +80,8 @@ const isLogroUnlocked = () => {
 
 const isAnswer = async ({ target }) => {
   view.disableButtons();
+  const respuestaCorrecta = game.getCorrectAnswer();
+
   const isAcertada = target.innerHTML === respuestaCorrecta;
 
   const { gameOver, isLogro, categoria } = isAcertada ? isLogroUnlocked() : false;

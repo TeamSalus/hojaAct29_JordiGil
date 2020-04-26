@@ -8,13 +8,33 @@ const difficulty = {
   RANDOM: '',
 };
 
+const versionActual = 'v1.0';
+
+const defaultDifficulty = Object.values(difficulty)[0];
+
+const saveVersion = (version) => {
+  localStorage.setItem('TriviaVersion', version);
+};
+
+const getSavedVersion = () => {
+  localStorage.getItem('TriviaVersion');
+};
+
 const setRunning = () => {
   localStorage.setItem('TriviaRunning', true);
 };
 
+const isGameRunning = () =>
+  localStorage.getItem('TriviaRunning') === null
+    ? false
+    : atob(localStorage.getItem('TriviaRunning'));
+
 const setTotalCategories = (totalCategories) => {
   localStorage.setItem('TriviaTotalCategories', totalCategories);
 };
+
+const setCategories = (categories) =>
+  localStorage.setItem('triviaCategories', JSON.stringify(categories));
 
 const saveCategories = (categories) =>
   localStorage.setItem('triviaCategories', JSON.stringify(categories));
@@ -44,41 +64,40 @@ const setNextLevel = () => {
   setLevel(nextLevel);
 };
 
+const setCorrectAnswer = (alreadyEncodedcorrectAnswer) =>
+  localStorage.setItem('TriviaCorrectAnswer', alreadyEncodedcorrectAnswer);
+const getCorrectAnswer = () => atob(localStorage.getItem('TriviaCorrectAnswer'));
+
 const saveProgress = () => {
   const preguntasAcertadas = document.getElementById('preguntasAcertadas').textContent;
   const preguntasRespondidas = document.getElementById('preguntasRespondidas').textContent;
   const logrosConseguidos = document.getElementById('logrosConseguidos').textContent;
 
-  localStorage.setItem('TriviaPreguntasAcertadas', preguntasAcertadas);
-  localStorage.setItem('TriviapreguntasRespondidas', preguntasRespondidas);
-  localStorage.setItem('TrivialogrosConseguidos', logrosConseguidos);
+  localStorage.setItem('TriviaPreguntasAcertadas', btoa(preguntasAcertadas));
+  localStorage.setItem('TriviapreguntasRespondidas', btoa(preguntasRespondidas));
+  localStorage.setItem('TrivialogrosConseguidos', btoa(logrosConseguidos));
 };
 
 const resetGame = () => {
-  localStorage.removeItem('TriviaPreguntasAcertadas', preguntasAcertadas);
-  localStorage.removeItem('TriviapreguntasRespondidas', preguntasRespondidas);
-  localStorage.removeItem('TrivialogrosConseguidos', logrosConseguidos);
-  localStorage.removeItem('TriviaRunning', false);
+  localStorage.removeItem('TriviaPreguntasAcertadas');
+  localStorage.removeItem('TriviapreguntasRespondidas');
+  localStorage.removeItem('TrivialogrosConseguidos');
+  localStorage.removeItem('TriviaRunning');
+  localStorage.removeItem('TriviaRunning');
 };
-
-const isGameRunning = () => localStorage.getItem('TriviaRunning');
 
 const getProgress = () => {
-  const preguntasAcertadas = localStorage.getItem('TriviaPreguntasAcertadas');
-  const preguntasRespondidas = localStorage.getItem('TriviapreguntasRespondidas');
-  const logrosConseguidos = localStorage.getItem('TrivialogrosConseguidos');
-  const logrosDisponibles = localStorage.getItem('TriviaTotalCategories');
-  const nivelSeleccionado = localStorage.getItem('TriviaDifficulty');
-
-  return {
-    preguntasAcertadas,
-    preguntasRespondidas,
-    logrosConseguidos,
-    logrosDisponibles,
-    nivelSeleccionado,
+  const progress = {
+    preguntasAcertadas: atob(localStorage.getItem('TriviaPreguntasAcertadas')),
+    preguntasRespondidas: atob(localStorage.getItem('TriviapreguntasRespondidas')),
+    logrosConseguidos: atob(localStorage.getItem('TrivialogrosConseguidos')),
   };
-};
 
+  nivelSeleccionado = localStorage.getItem('TriviaDifficulty') || defaultDifficulty;
+  totalCategories = localStorage.getItem('TriviaTotalCategories');
+
+  return { ...progress, nivelSeleccionado, totalCategories };
+};
 const game = {
   saveCategories,
   getSavedCategories,
@@ -90,4 +109,10 @@ const game = {
   getProgress,
   setTotalCategories,
   setRunning,
+  setCorrectAnswer,
+  getCorrectAnswer,
+  defaultDifficulty,
+  saveVersion,
+  getSavedVersion,
+  versionActual,
 };
