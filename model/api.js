@@ -7,11 +7,9 @@ const getToken = async () => {
   return token;
 }
 
-const getQuestions = async (difficulty, token) =>
+const getQuestions = async (difficulty = 'easy', token = '') =>
   (
-    await fetch(
-      `https://opentdb.com/api.php?amount=1&difficulty=${difficulty || 'easy'}&token=${token || ''}`
-    )
+    await fetch(`https://opentdb.com/api.php?amount=1&difficulty=${difficulty}&token=${token}`)
   ).json();
 
 const getCategories = async () => (await fetch('https://opentdb.com/api_category.php')).json();
