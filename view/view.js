@@ -25,18 +25,18 @@ const updateAvailableLogros = (numeroCategorias) => {
   logrosDisponibles.textContent = numeroCategorias;
 };
 
-const resumeMarcador = (
+const resumeMarcador = ({
   preguntasAcertadas,
   preguntasRespondidas,
   logrosConseguidos,
   logrosDisponibles,
-  nivelSeleccionado
-) => {
-  document.getElementById('preguntasAcertadas').textContent = preguntasAcertadas;
-  document.getElementById('preguntasRespondidas').textContent = preguntasRespondidas;
-  document.getElementById('logrosConseguidos').textContent = logrosConseguidos;
+  nivelSeleccionado,
+}) => {
+  document.getElementById('preguntasAcertadas').textContent = preguntasAcertadas || 0;
+  document.getElementById('preguntasRespondidas').textContent = preguntasRespondidas || 0;
+  document.getElementById('logrosConseguidos').textContent = logrosConseguidos || 0;
   document.getElementById('logrosDisponibles').textContent = logrosDisponibles;
-  document.getElementById('btnNivel').textContent = nivelSeleccionado.toUpperCase();
+  document.getElementById('btnNivel').textContent = (nivelSeleccionado || 'RANDOM').toUpperCase();
 };
 
 const updateMarcador = (acertada, isLogro) => {

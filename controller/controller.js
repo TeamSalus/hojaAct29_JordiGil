@@ -3,22 +3,8 @@
 /* eslint-disable no-undef */
 
 const gameInit = async () => {
-  if (game.isGameRunning()) {
-    const {
-      preguntasAcertadas,
-      preguntasRespondidas,
-      logrosConseguidos,
-      logrosDisponibles,
-      nivelSeleccionado,
-    } = game.getProgress();
-    view.resumeMarcador(
-      preguntasAcertadas,
-      preguntasRespondidas,
-      logrosConseguidos,
-      logrosDisponibles,
-      nivelSeleccionado
-    );
-  } else {
+  if (game.isGameRunning()) view.resumeMarcador(game.getProgress());
+  else {
     const { trivia_categories: categories } = await api.getCategories();
     game.saveCategories(categories);
     game.setTotalCategories(categories.length);
@@ -27,7 +13,7 @@ const gameInit = async () => {
   }
 };
 
-const userInit = async (difficulty) => {
+const userInit = async (difficulty = 'easy') => {
   const token = user.getUserToken() === null ? await api.getToken() : user.getUserToken();
   user.setUserToken(token);
   if (user.getUserDifficulty() === null) user.setUserDifficulty(difficulty);
