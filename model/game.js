@@ -83,7 +83,7 @@ const resetGame = () => {
   localStorage.removeItem('TriviapreguntasRespondidas');
   localStorage.removeItem('TrivialogrosConseguidos');
   localStorage.removeItem('TriviaRunning');
-  localStorage.removeItem('TriviaRunning');
+  localStorage.removeItem('TriviaCategories');
 };
 
 const getProgress = () => {
