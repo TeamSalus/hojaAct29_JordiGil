@@ -1,11 +1,15 @@
+/* eslint-disable no-undef */
 const User = {};
 
-User.setUserDifficulty = (difficulty) => localStorage.setItem('TriviaDifficulty', difficulty);
-
-User.getUserDifficulty = () => localStorage.getItem('TriviaDifficulty');
-
-User.setUserToken = (token) => {
-    localStorage.setItem('TriviaToken', token);
+User.setUserDifficulty = (difficulty) => {
+    DB.data.gameDifficulty = difficulty;
+    DB.saveDB();
 };
 
-User.getUserToken = () => localStorage.getItem('TriviaToken');
+User.getUserDifficulty = () => DB.data.gameDifficulty;
+
+User.setUserToken = (token) => {
+    DB.data.token = token;
+};
+
+User.getUserToken = () => DB.data.token;

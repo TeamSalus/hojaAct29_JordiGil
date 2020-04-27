@@ -3,10 +3,11 @@
 const Controller = {};
 
 Controller.initGame = async () => {
+    await DB.loadDB();
     if (Game.isGameRunning()) UI.resumeMarcador(Game.getProgress());
     else {
         const { trivia_categories: categories } = await API.getCategories();
-        Game.saveCategories(categories);
+        Game.setCategories(categories);
         Game.setTotalCategories(categories.length);
         Game.setRunning();
         Game.saveProgress();
@@ -38,12 +39,14 @@ Controller.getNextQuestion = async (difficulty) => {
 };
 
 Controller.renderQuestion = async () => {
-    const difficulty = User.getUserDifficulty();
+    const difficulty = User.getUserDifficulty() || Game.getDefaultDifficulty();
 
     let pregunta = await Controller.getNextQuestion(difficulty);
+
     pregunta = Util.preparaPreguntaParaVista(pregunta);
 
     UI.showQuestion(pregunta);
+    DB.saveDB();
 };
 
 Controller.preloadQuestion = async (difficulty) => {
