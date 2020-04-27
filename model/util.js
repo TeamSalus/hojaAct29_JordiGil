@@ -1,4 +1,6 @@
-const randomizeAnswers = (answers) =>
+const Util = {};
+
+Util.randomizeAnswers = (answers) =>
   answers.sort(() => {
     let random;
     do {
@@ -9,9 +11,9 @@ const randomizeAnswers = (answers) =>
     return 1;
   });
 
-const preparaPreguntaParaVista = (question) => {
+Util.preparaPreguntaParaVista = (question) => {
   let answers = [...question.incorrect_answers, question.correct_answer];
-  answers = randomizeAnswers(answers);
+  answers = Util.randomizeAnswers(answers);
   const trueFalse = atob(question.type) === 'boolean';
   return {
     category: atob(question.category),
@@ -23,10 +25,4 @@ const preparaPreguntaParaVista = (question) => {
     answer3: trueFalse ? null : atob(answers[2]),
     answer4: trueFalse ? null : atob(answers[3]),
   };
-};
-
-// eslint-disable-next-line no-unused-vars
-const util = {
-  randomizeAnswers,
-  preparaPreguntaParaVista,
 };

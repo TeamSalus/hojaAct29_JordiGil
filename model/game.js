@@ -1,118 +1,89 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
+const Game = {};
 
-const difficulty = {
-  EASY: 'easy',
-  MEDIUM: 'medium',
-  HARD: 'hard',
-  RANDOM: '',
+Game.difficulty = {
+    EASY: 'easy',
+    MEDIUM: 'medium',
+    HARD: 'hard',
+    RANDOM: '',
 };
 
-const versionActual = 'v1.0';
+Game.getDefaultDifficulty = () => Object.values(Game.difficulty)[0];
 
-const defaultDifficulty = Object.values(difficulty)[0];
-
-const saveVersion = (version) => {
-  localStorage.setItem('TriviaVersion', version);
+Game.getSavedVersion = () => {
+    localStorage.getItem('TriviaVersion');
 };
 
-const getSavedVersion = () => {
-  localStorage.getItem('TriviaVersion');
+Game.setRunning = () => {
+    localStorage.setItem('TriviaRunning', true);
 };
 
-const setRunning = () => {
-  localStorage.setItem('TriviaRunning', true);
+Game.isGameRunning = () =>
+    localStorage.getItem('TriviaRunning') === null ? false : atob(localStorage.getItem('TriviaRunning'));
+
+Game.setTotalCategories = (totalCategories) => {
+    localStorage.setItem('TriviaTotalCategories', totalCategories);
 };
 
-const isGameRunning = () =>
-  localStorage.getItem('TriviaRunning') === null
-    ? false
-    : atob(localStorage.getItem('TriviaRunning'));
+Game.setCategories = (categories) => localStorage.setItem('triviaCategories', JSON.stringify(categories));
 
-const setTotalCategories = (totalCategories) => {
-  localStorage.setItem('TriviaTotalCategories', totalCategories);
+Game.saveCategories = (categories) => localStorage.setItem('triviaCategories', JSON.stringify(categories));
+
+Game.getSavedCategories = () => JSON.parse(localStorage.getItem('triviaCategories'));
+
+Game.removeCategory = (category, listCategories) => {
+    const updatedList = listCategories.filter((_category) => _category.name !== category);
+    Game.saveCategories(updatedList);
 };
 
-const setCategories = (categories) =>
-  localStorage.setItem('triviaCategories', JSON.stringify(categories));
-
-const saveCategories = (categories) =>
-  localStorage.setItem('triviaCategories', JSON.stringify(categories));
-
-const getSavedCategories = () => JSON.parse(localStorage.getItem('triviaCategories'));
-
-const removeCategory = (category, listCategories) => {
-  const updatedList = listCategories.filter((_category) => _category.name !== category);
-  saveCategories(updatedList);
+Game.setLevel = (level) => {
+    // eslint-disable-next-line no-undef
+    User.setUserDifficulty(level);
 };
 
-const setLevel = (level) => {
-  user.setUserDifficulty(level);
+Game.setNextLevel = () => {
+    const btnNivel = document.getElementById('btnNivel');
+    const actualLevel = btnNivel.textContent;
+    const levelIndex = Object.keys(Game.difficulty).findIndex((levels) => levels === actualLevel.toUpperCase());
+    const { length } = Object.keys(Game.difficulty);
+    const nextLevelIndex = levelIndex === length - 1 ? 0 : levelIndex + 1;
+    const nextLevel = Object.values(Game.difficulty)[nextLevelIndex];
+
+    btnNivel.textContent = Object.keys(Game.difficulty)[nextLevelIndex];
+    Game.setLevel(nextLevel);
 };
 
-const setNextLevel = () => {
-  const btnNivel = document.getElementById('btnNivel');
-  const actualLevel = btnNivel.textContent;
-  const levelIndex = Object.keys(difficulty).findIndex(
-    (levels) => levels === actualLevel.toUpperCase()
-  );
-  const { length } = Object.keys(difficulty);
-  const nextLevelIndex = levelIndex === length - 1 ? 0 : levelIndex + 1;
-  const nextLevel = Object.values(difficulty)[nextLevelIndex];
+Game.setCorrectAnswer = (alreadyEncodedcorrectAnswer) =>
+    localStorage.setItem('TriviaCorrectAnswer', alreadyEncodedcorrectAnswer);
 
-  btnNivel.textContent = Object.keys(difficulty)[nextLevelIndex];
-  setLevel(nextLevel);
+Game.getCorrectAnswer = () => atob(localStorage.getItem('TriviaCorrectAnswer'));
+
+Game.saveProgress = () => {
+    const preguntasAcertadas = document.getElementById('preguntasAcertadas').textContent;
+    const preguntasRespondidas = document.getElementById('preguntasRespondidas').textContent;
+    const logrosConseguidos = document.getElementById('logrosConseguidos').textContent;
+
+    localStorage.setItem('TriviaPreguntasAcertadas', btoa(preguntasAcertadas));
+    localStorage.setItem('TriviapreguntasRespondidas', btoa(preguntasRespondidas));
+    localStorage.setItem('TrivialogrosConseguidos', btoa(logrosConseguidos));
 };
 
-const setCorrectAnswer = (alreadyEncodedcorrectAnswer) =>
-  localStorage.setItem('TriviaCorrectAnswer', alreadyEncodedcorrectAnswer);
-const getCorrectAnswer = () => atob(localStorage.getItem('TriviaCorrectAnswer'));
-
-const saveProgress = () => {
-  const preguntasAcertadas = document.getElementById('preguntasAcertadas').textContent;
-  const preguntasRespondidas = document.getElementById('preguntasRespondidas').textContent;
-  const logrosConseguidos = document.getElementById('logrosConseguidos').textContent;
-
-  localStorage.setItem('TriviaPreguntasAcertadas', btoa(preguntasAcertadas));
-  localStorage.setItem('TriviapreguntasRespondidas', btoa(preguntasRespondidas));
-  localStorage.setItem('TrivialogrosConseguidos', btoa(logrosConseguidos));
+Game.resetGame = () => {
+    localStorage.removeItem('TriviaPreguntasAcertadas');
+    localStorage.removeItem('TriviapreguntasRespondidas');
+    localStorage.removeItem('TrivialogrosConseguidos');
+    localStorage.removeItem('TriviaRunning');
+    localStorage.removeItem('TriviaCategories');
 };
 
-const resetGame = () => {
-  localStorage.removeItem('TriviaPreguntasAcertadas');
-  localStorage.removeItem('TriviapreguntasRespondidas');
-  localStorage.removeItem('TrivialogrosConseguidos');
-  localStorage.removeItem('TriviaRunning');
-  localStorage.removeItem('TriviaCategories');
-};
+Game.getProgress = () => {
+    const progress = {
+        preguntasAcertadas: atob(localStorage.getItem('TriviaPreguntasAcertadas')),
+        preguntasRespondidas: atob(localStorage.getItem('TriviapreguntasRespondidas')),
+        logrosConseguidos: atob(localStorage.getItem('TrivialogrosConseguidos')),
+    };
+    const nivelSeleccionado = localStorage.getItem('TriviaDifficulty') || Game.getDefaultDifficulty();
 
-const getProgress = () => {
-  const progress = {
-    preguntasAcertadas: atob(localStorage.getItem('TriviaPreguntasAcertadas')),
-    preguntasRespondidas: atob(localStorage.getItem('TriviapreguntasRespondidas')),
-    logrosConseguidos: atob(localStorage.getItem('TrivialogrosConseguidos')),
-  };
+    const totalCategories = localStorage.getItem('TriviaTotalCategories');
 
-  nivelSeleccionado = localStorage.getItem('TriviaDifficulty') || defaultDifficulty;
-  totalCategories = localStorage.getItem('TriviaTotalCategories');
-
-  return { ...progress, nivelSeleccionado, totalCategories };
-};
-const game = {
-  saveCategories,
-  getSavedCategories,
-  removeCategory,
-  setNextLevel,
-  saveProgress,
-  resetGame,
-  isGameRunning,
-  getProgress,
-  setTotalCategories,
-  setRunning,
-  setCorrectAnswer,
-  getCorrectAnswer,
-  defaultDifficulty,
-  saveVersion,
-  getSavedVersion,
-  versionActual,
+    return { ...progress, nivelSeleccionado, totalCategories };
 };

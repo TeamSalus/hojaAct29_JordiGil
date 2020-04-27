@@ -1,24 +1,12 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
+const API = {};
 
-// prettier-ignore
-
-const getToken = async () => {
-  const { token } = await (await fetch('https://opentdb.com/api_token.php?command=request')).json();
-  return token;
-}
-
-const getQuestions = async (difficulty = game.defaultDifficulty, token = '') =>
-  (
-    await fetch(
-      `https://opentdb.com/api.php?amount=1&difficulty=${difficulty}&token=${token}&encode=base64`
-    )
-  ).json();
-
-const getCategories = async () => (await fetch('https://opentdb.com/api_category.php')).json();
-
-const api = {
-  getToken,
-  getQuestions,
-  getCategories,
+API.getToken = async () => {
+    const { token } = await (await fetch('https://opentdb.com/api_token.php?command=request')).json();
+    return token;
 };
+
+// eslint-disable-next-line no-undef
+API.getQuestions = async (difficulty = Game.getDefaultDifficulty(), token = '') =>
+    (await fetch(`https://opentdb.com/api.php?amount=1&difficulty=${difficulty}&token=${token}&encode=base64`)).json();
+
+API.getCategories = async () => (await fetch('https://opentdb.com/api_category.php')).json();

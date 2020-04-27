@@ -1,17 +1,11 @@
-const setUserDifficulty = (difficulty) => localStorage.setItem('TriviaDifficulty', difficulty);
+const User = {};
 
-const getUserDifficulty = () => localStorage.getItem('TriviaDifficulty');
+User.setUserDifficulty = (difficulty) => localStorage.setItem('TriviaDifficulty', difficulty);
 
-const setUserToken = (token) => {
-  localStorage.setItem('TriviaToken', token);
+User.getUserDifficulty = () => localStorage.getItem('TriviaDifficulty');
+
+User.setUserToken = (token) => {
+    localStorage.setItem('TriviaToken', token);
 };
 
-const getUserToken = () => localStorage.getItem('TriviaToken');
-
-// eslint-disable-next-line no-unused-vars
-const user = {
-  setUserToken,
-  getUserToken,
-  setUserDifficulty,
-  getUserDifficulty,
-};
+User.getUserToken = () => localStorage.getItem('TriviaToken');

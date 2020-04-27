@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 
 const main = async () => {
-  await controller.gameInit();
-  await controller.userInit();
-  controller.renderQuestion();
+    await Controller.initGame();
+    await Controller.initUser();
+    Controller.renderQuestion();
 };
 main();
