@@ -11,18 +11,26 @@ Util.randomizeAnswers = (answers) =>
         return 1;
     });
 
+Util.b64DecodeUnicode = (palabra) =>
+    decodeURIComponent(
+        atob(palabra)
+            .split('')
+            .map((letra) => `%${`00${letra.charCodeAt(0).toString(16)}`.slice(-2)}`)
+            .join('')
+    );
+
 Util.preparaPreguntaParaVista = (question) => {
     let answers = [...question.incorrect_answers, question.correct_answer];
     answers = Util.randomizeAnswers(answers);
-    const trueFalse = atob(question.type) === 'boolean';
+    const trueFalse = Util.b64DecodeUnicode(question.type) === 'boolean';
     return {
-        category: atob(question.category),
+        category: Util.b64DecodeUnicode(question.category),
         trueFalse,
-        difficulty: atob(question.difficulty),
-        question: atob(question.question),
-        answer1: atob(answers[0]),
-        answer2: atob(answers[1]),
-        answer3: trueFalse ? null : atob(answers[2]),
-        answer4: trueFalse ? null : atob(answers[3]),
+        difficulty: Util.b64DecodeUnicode(question.difficulty),
+        question: Util.b64DecodeUnicode(question.question),
+        answer1: Util.b64DecodeUnicode(answers[0]),
+        answer2: Util.b64DecodeUnicode(answers[1]),
+        answer3: trueFalse ? null : Util.b64DecodeUnicode(answers[2]),
+        answer4: trueFalse ? null : Util.b64DecodeUnicode(answers[3]),
     };
 };

@@ -39,7 +39,9 @@ Game.setLevel = (level) => {
 Game.setNextLevel = () => {
     const btnNivel = document.getElementById('btnNivel');
     const actualLevel = btnNivel.textContent;
-    const levelIndex = Object.keys(Game.difficulty).findIndex((levels) => levels === actualLevel.toUpperCase());
+    const levelIndex = Object.keys(Game.difficulty).findIndex(
+        (levels) => levels === actualLevel.toUpperCase()
+    );
     const { length } = Object.keys(Game.difficulty);
     const nextLevelIndex = levelIndex === length - 1 ? 0 : levelIndex + 1;
     const nextLevel = Object.values(Game.difficulty)[nextLevelIndex];

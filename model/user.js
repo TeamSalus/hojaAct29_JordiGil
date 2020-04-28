@@ -10,6 +10,7 @@ User.getUserDifficulty = () => DB.data.gameDifficulty;
 
 User.setUserToken = (token) => {
     DB.data.token = token;
+    DB.saveDB();
 };
 
 User.getUserToken = () => DB.data.token;

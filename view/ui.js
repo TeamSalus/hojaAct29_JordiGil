@@ -105,7 +105,9 @@ UI.showFail = async (respuestaCorrecta) => {
 
 UI.showVictory = async () => {
     const preguntasAcertadas = Number(document.getElementById('preguntasAcertadas').textContent);
-    const preguntasRespondidas = Number(document.getElementById('preguntasRespondidas').textContent);
+    const preguntasRespondidas = Number(
+        document.getElementById('preguntasRespondidas').textContent
+    );
 
     // eslint-disable-next-line no-undef
     const notifier = new AWN();
@@ -124,9 +126,10 @@ UI.showVictory = async () => {
         }, 2000);
     };
     notifier.confirm(
-        `Enhorabuena!!! <br></br>Conseguiste un ${((preguntasAcertadas / preguntasRespondidas) * 100).toFixed(
-            0
-        )}% de aciertos. <br></br>Pulsa Ok para reiniciar el juego`,
+        `Enhorabuena!!! <br></br>Conseguiste un ${(
+            (preguntasAcertadas / preguntasRespondidas) *
+            100
+        ).toFixed(0)}% de aciertos. <br></br>Pulsa Ok para reiniciar el juego`,
         onOk,
         false,
         {

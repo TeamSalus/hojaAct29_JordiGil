@@ -31,22 +31,36 @@ Controller.getNextQuestion = async (difficulty) => {
         User.getUserToken('token')
     );
 
-    Game.setCorrectAnswer(pregunta[0].correct_answer);
+    if (errorAPI === 3 || errorAPI === 4) {
+        Controller.tokenReset();
+    } else {
+        Game.setCorrectAnswer(pregunta[0].correct_answer);
+        return pregunta[0];
+    }
+    return false;
+};
 
-    if (errorAPI === 4) Controller.tokenReset();
-
-    return pregunta[0];
+Controller.restartGame = () => {
+    Game.resetGame();
+    Controller.renderQuestion();
 };
 
 Controller.renderQuestion = async () => {
     const difficulty = User.getUserDifficulty() || Game.getDefaultDifficulty();
-
     let pregunta = await Controller.getNextQuestion(difficulty);
 
-    pregunta = Util.preparaPreguntaParaVista(pregunta);
+    // Si no hay pregunta significa que el Token ha caducado, al voler a requerir regeneramos Token
+    if (!pregunta) await Controller.getNextQuestion(difficulty);
 
-    UI.showQuestion(pregunta);
-    DB.saveDB();
+    /* Si vuele a no ver pregunta significaría que hay algún error que no he controlado y para evitar
+        un bucle infinito y evitar baneos del servidor, reseteamos el juego.
+     */
+    if (!pregunta) Controller.restartGame();
+    else {
+        pregunta = Util.preparaPreguntaParaVista(pregunta);
+        UI.showQuestion(pregunta);
+        DB.saveDB();
+    }
 };
 
 Controller.preloadQuestion = async (difficulty) => {
@@ -93,7 +107,9 @@ Controller.isAnswer = async ({ target }) => {
     Game.saveProgress();
     const preload = Controller.preloadQuestion(User.getUserDifficulty());
 
-    const notificacion = isAcertada ? UI.showSuccess(isLogro, categoria) : UI.showFail(respuestaCorrecta);
+    const notificacion = isAcertada
+        ? UI.showSuccess(isLogro, categoria)
+        : UI.showFail(respuestaCorrecta);
     const nextQuestion = [await preload, await notificacion][0];
 
     UI.showQuestion(nextQuestion);

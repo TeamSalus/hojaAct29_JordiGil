@@ -25,4 +25,5 @@ DB.loadDB = async () => {
     return false;
 };
 
-DB.saveDB = () => localStorage.setItem(`trivia${DB.data.gameVersion}`, btoa(JSON.stringify(DB.data)));
+DB.saveDB = () =>
+    localStorage.setItem(`trivia${DB.data.gameVersion}`, btoa(JSON.stringify(DB.data)));
