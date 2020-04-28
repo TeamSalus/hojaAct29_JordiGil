@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
 
 const main = async () => {
-  await controller.gameInit();
-  await controller.userInit();
-  controller.renderQuestion();
+    DB.data.gameVersion = 'v2';
+    await Controller.initGame();
+    await Controller.initUser();
+    Controller.renderQuestion();
 };
 main();

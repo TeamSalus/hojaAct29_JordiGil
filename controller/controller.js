@@ -1,106 +1,124 @@
-/* eslint-disable prefer-const */
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
-const gameInit = async () => {
-  if (game.isGameRunning()) view.resumeMarcador(game.getProgress());
-  else {
-    const { trivia_categories: categories } = await api.getCategories();
-    game.saveCategories(categories);
-    game.setTotalCategories(categories.length);
-    game.setRunning();
-    view.updateAvailableLogros(categories.length);
-  }
+const Controller = {};
+
+Controller.initGame = async () => {
+    await DB.loadDB();
+    if (Game.isGameRunning()) UI.resumeMarcador(Game.getProgress());
+    else {
+        const { trivia_categories: categories } = await API.getCategories();
+        Game.setCategories(categories);
+        Game.setTotalCategories(categories.length);
+        Game.setRunning();
+        Game.saveProgress();
+        UI.updateAvailableLogros(categories.length);
+    }
 };
 
-const userInit = async (difficulty = 'easy') => {
-  const token = user.getUserToken() === null ? await api.getToken() : user.getUserToken();
-  user.setUserToken(token);
-  if (user.getUserDifficulty() === null) user.setUserDifficulty(difficulty);
+Controller.initUser = async (difficulty = 'easy') => {
+    const token = User.getUserToken() || (await API.getToken());
+    User.setUserToken(token);
+    if (User.getUserDifficulty() === null) User.setUserDifficulty(difficulty);
 };
 
-const tokenReset = async () => {
-  user.setUserToken(await api.getToken());
+Controller.tokenReset = async () => {
+    User.setUserToken(await API.getToken());
+};
+// prettier-ignore
+Controller.getNextCategory = () => {
+    const randomCat = Math.round(Math.random() * ((DB.data.unlockedCategories).length - 1));
+    return DB.data.unlockedCategories[randomCat].id;
+}
+
+Controller.getNextQuestion = async (difficulty) => {
+    const category = DB.data.isFastMode ? Controller.getNextCategory() : '';
+    const { response_code: errorAPI, results: pregunta } = await API.getQuestions(
+        difficulty,
+        User.getUserToken('token'),
+        category
+    );
+
+    if (errorAPI === 3 || errorAPI === 4) {
+        Controller.tokenReset();
+    } else {
+        Game.setCorrectAnswer(pregunta[0].correct_answer);
+        return pregunta[0];
+    }
+    return false;
 };
 
-const getNextQuestion = async (difficulty) => {
-  let { response_code: errorApi, results: pregunta } = await api.getQuestions(
-    difficulty,
-    user.getUserToken('token')
-  );
-
-  respuestaCorrecta = pregunta[0].correct_answer;
-
-  if (errorApi === 4) tokenReset(token);
-
-  return pregunta[0];
+Controller.restartGame = () => {
+    Game.resetGame();
+    Controller.initGame();
+    Controller.initUser();
+    Controller.renderQuestion();
 };
 
-const renderQuestion = async () => {
-  const difficulty = localStorage.getItem('TriviaDifficulty');
+Controller.renderQuestion = async () => {
+    const difficulty = User.getUserDifficulty() || Game.getDefaultDifficulty();
+    let pregunta = await Controller.getNextQuestion(difficulty);
 
-  let pregunta = await getNextQuestion(difficulty);
-  pregunta = util.preparaPreguntaParaVista(pregunta);
+    // Si no hay pregunta significa que el Token ha caducado, al voler a requerir regeneramos Token
+    if (!pregunta) await Controller.getNextQuestion(difficulty);
 
-  view.showQuestion(pregunta);
+    /* Si vuele a no ver pregunta significaría que hay algún error que no he controlado y para evitar
+        un bucle infinito y evitar baneos del servidor, reseteamos el juego.
+     */
+    if (!pregunta) Controller.restartGame();
+    else {
+        pregunta = Util.preparaPreguntaParaVista(pregunta);
+        UI.showQuestion(pregunta);
+        DB.saveDB();
+    }
 };
 
-const preloadQuestion = async (difficulty) => {
-  let pregunta = await getNextQuestion(difficulty);
+Controller.preloadQuestion = async (difficulty) => {
+    let pregunta = await Controller.getNextQuestion(difficulty);
 
-  pregunta = util.preparaPreguntaParaVista(pregunta);
-  return pregunta;
+    pregunta = Util.preparaPreguntaParaVista(pregunta);
+    return pregunta;
 };
 
-const isLogroUnlocked = () => {
-  const categoria = document.getElementById('categoria').textContent;
-  let listCategories = game.getSavedCategories();
+Controller.isLogroUnlocked = () => {
+    const categoria = document.getElementById('categoria').textContent;
+    const listCategories = Game.getSavedCategories();
 
-  const isCategoriaUnlocked = listCategories.find((_categoria) => _categoria.name === categoria);
-  if (isCategoriaUnlocked === undefined) return { isLogro: false };
+    const isCategoriaUnlocked = listCategories.find((_categoria) => _categoria.name === categoria);
+    if (isCategoriaUnlocked === undefined) return { isLogro: false };
 
-  if (listCategories.length === 1) {
-    view.showVictory();
-    game.resetGame();
+    if (listCategories.length === 1) {
+        UI.showVictory();
+        return {
+            gameOver: true,
+        };
+    }
+
+    Game.removeCategory(categoria, listCategories);
+
     return {
-      gameOver: true,
+        isLogro: true,
+        categoria,
     };
-  }
-
-  game.removeCategory(categoria, listCategories);
-
-  return {
-    isLogro: true,
-    categoria,
-  };
 };
 
-const isAnswer = async ({ target }) => {
-  view.disableButtons();
-  const isAcertada = target.innerHTML === respuestaCorrecta;
+Controller.isAnswer = async ({ target }) => {
+    UI.disableButtons();
+    const respuestaCorrecta = Game.getCorrectAnswer();
 
-  const { gameOver, isLogro, categoria } = isAcertada ? isLogroUnlocked() : false;
+    const isAcertada = target.innerHTML === respuestaCorrecta;
 
-  if (gameOver) return;
+    const { gameOver, isLogro, categoria } = isAcertada ? Controller.isLogroUnlocked() : false;
 
-  view.updateMarcador(isAcertada, isLogro);
-  game.saveProgress();
-  const preload = preloadQuestion(user.getUserDifficulty());
+    if (gameOver) return;
 
-  const notificacion = isAcertada
-    ? view.showSuccess(isLogro, categoria)
-    : view.showFail(respuestaCorrecta);
-  const nextQuestion = [await preload, await notificacion][0];
+    UI.updateMarcador(isAcertada, isLogro);
+    Game.saveProgress();
+    const preload = Controller.preloadQuestion(User.getUserDifficulty());
 
-  view.showQuestion(nextQuestion);
-};
+    const notificacion = isAcertada
+        ? UI.showSuccess(isLogro, categoria)
+        : UI.showFail(respuestaCorrecta);
+    const nextQuestion = [await preload, await notificacion][0];
 
-const controller = {
-  userInit,
-  tokenReset,
-  getNextQuestion,
-  renderQuestion,
-  isAnswer,
-  preloadQuestion,
-  gameInit,
+    UI.showQuestion(nextQuestion);
 };

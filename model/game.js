@@ -1,93 +1,112 @@
 /* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
+const Game = {};
 
-const difficulty = {
-  EASY: 'easy',
-  MEDIUM: 'medium',
-  HARD: 'hard',
-  RANDOM: '',
+Game.difficulty = {
+    EASY: 'easy',
+    MEDIUM: 'medium',
+    HARD: 'hard',
+    RANDOM: '',
 };
 
-const setRunning = () => {
-  localStorage.setItem('TriviaRunning', true);
+Game.getDefaultDifficulty = () => Object.values(Game.difficulty)[0];
+
+Game.setRunning = () => {
+    DB.data.isGameRunning = true;
 };
 
-const setTotalCategories = (totalCategories) => {
-  localStorage.setItem('TriviaTotalCategories', totalCategories);
+Game.isGameRunning = () => DB.data.isGameRunning;
+
+Game.setTotalCategories = (totalCategories) => {
+    DB.data.totalCategories = totalCategories;
 };
 
-const saveCategories = (categories) =>
-  localStorage.setItem('triviaCategories', JSON.stringify(categories));
-
-const getSavedCategories = () => JSON.parse(localStorage.getItem('triviaCategories'));
-
-const removeCategory = (category, listCategories) => {
-  const updatedList = listCategories.filter((_category) => _category.name !== category);
-  saveCategories(updatedList);
+Game.setCategories = (categories) => {
+    DB.data.unlockedCategories = categories;
+    DB.saveDB();
 };
 
-const setLevel = (level) => {
-  user.setUserDifficulty(level);
+Game.getSavedCategories = () => DB.data.unlockedCategories;
+
+Game.removeCategory = (category, listCategories) => {
+    const updatedList = listCategories.filter((_category) => _category.name !== category);
+    Game.setCategories(updatedList);
 };
 
-const setNextLevel = () => {
-  const btnNivel = document.getElementById('btnNivel');
-  const actualLevel = btnNivel.textContent;
-  const levelIndex = Object.keys(difficulty).findIndex(
-    (levels) => levels === actualLevel.toUpperCase()
-  );
-  const { length } = Object.keys(difficulty);
-  const nextLevelIndex = levelIndex === length - 1 ? 0 : levelIndex + 1;
-  const nextLevel = Object.values(difficulty)[nextLevelIndex];
-
-  btnNivel.textContent = Object.keys(difficulty)[nextLevelIndex];
-  setLevel(nextLevel);
+Game.setLevel = (level) => {
+    // eslint-disable-next-line no-undef
+    User.setUserDifficulty(level);
 };
 
-const saveProgress = () => {
-  const preguntasAcertadas = document.getElementById('preguntasAcertadas').textContent;
-  const preguntasRespondidas = document.getElementById('preguntasRespondidas').textContent;
-  const logrosConseguidos = document.getElementById('logrosConseguidos').textContent;
+Game.setNextLevel = () => {
+    const btnNivel = document.getElementById('btnNivel');
+    const actualLevel = btnNivel.textContent;
+    const levelIndex = Object.keys(Game.difficulty).findIndex(
+        (levels) => levels === actualLevel.toUpperCase()
+    );
+    const { length } = Object.keys(Game.difficulty);
+    const nextLevelIndex = levelIndex === length - 1 ? 0 : levelIndex + 1;
+    const nextLevel = Object.values(Game.difficulty)[nextLevelIndex];
 
-  localStorage.setItem('TriviaPreguntasAcertadas', preguntasAcertadas);
-  localStorage.setItem('TriviapreguntasRespondidas', preguntasRespondidas);
-  localStorage.setItem('TrivialogrosConseguidos', logrosConseguidos);
+    btnNivel.textContent = Object.keys(Game.difficulty)[nextLevelIndex];
+    Game.setLevel(nextLevel);
 };
 
-const resetGame = () => {
-  localStorage.removeItem('TriviaPreguntasAcertadas', preguntasAcertadas);
-  localStorage.removeItem('TriviapreguntasRespondidas', preguntasRespondidas);
-  localStorage.removeItem('TrivialogrosConseguidos', logrosConseguidos);
-  localStorage.removeItem('TriviaRunning', false);
+Game.setCorrectAnswer = (correctAnswer) => {
+    DB.data.correctAnswer = Util.b64DecodeUnicode(correctAnswer);
 };
 
-const isGameRunning = () => localStorage.getItem('TriviaRunning');
+Game.getCorrectAnswer = () => DB.data.correctAnswer;
 
-const getProgress = () => {
-  const preguntasAcertadas = localStorage.getItem('TriviaPreguntasAcertadas');
-  const preguntasRespondidas = localStorage.getItem('TriviapreguntasRespondidas');
-  const logrosConseguidos = localStorage.getItem('TrivialogrosConseguidos');
-  const logrosDisponibles = localStorage.getItem('TriviaTotalCategories');
-  const nivelSeleccionado = localStorage.getItem('TriviaDifficulty');
+Game.saveProgress = () => {
+    const preguntasAcertadas = document.getElementById('preguntasAcertadas').textContent;
+    const preguntasRespondidas = document.getElementById('preguntasRespondidas').textContent;
+    const logrosConseguidos = document.getElementById('logrosConseguidos').textContent;
 
-  return {
-    preguntasAcertadas,
-    preguntasRespondidas,
-    logrosConseguidos,
-    logrosDisponibles,
-    nivelSeleccionado,
-  };
+    DB.data.preguntasAcertadas = preguntasAcertadas;
+    DB.data.preguntasRespondidas = preguntasRespondidas;
+    DB.data.logrosConseguidos = logrosConseguidos;
+    DB.saveDB();
 };
 
-const game = {
-  saveCategories,
-  getSavedCategories,
-  removeCategory,
-  setNextLevel,
-  saveProgress,
-  resetGame,
-  isGameRunning,
-  getProgress,
-  setTotalCategories,
-  setRunning,
+Game.resetGame = () => {
+    Object.keys(DB.data).map((key) => {
+        if (key !== 'gameVersion' && key !== 'token' && key !== 'isFastMode') {
+            DB.data[key] = null;
+        }
+        DB.saveDB();
+        return true;
+    });
+    UI.resetMarcador();
+};
+
+Game.setGameMode = ({ target }) => {
+    DB.data.isFastMode = !DB.data.isFastMode;
+    DB.saveDB();
+    // eslint-disable-next-line no-param-reassign
+    target.textContent = DB.data.isFastMode ? 'FAST MODE' : 'NORMAL MODE';
+};
+
+Game.getProgress = () => {
+    const progress = {
+        preguntasAcertadas: DB.data.preguntasAcertadas,
+        preguntasRespondidas: DB.data.preguntasRespondidas,
+        logrosConseguidos: DB.data.logrosConseguidos,
+    };
+    let nivelSeleccionado;
+    switch (DB.data.gameDifficulty) {
+        case '':
+            nivelSeleccionado = 'RANDOM';
+            break;
+        case null:
+            nivelSeleccionado = Game.getDefaultDifficulty();
+            break;
+
+        default:
+            nivelSeleccionado = DB.data.gameDifficulty;
+            break;
+    }
+
+    const { totalCategories } = DB.data;
+
+    return { ...progress, nivelSeleccionado, totalCategories };
 };
