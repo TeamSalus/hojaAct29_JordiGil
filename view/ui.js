@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const UI = {};
 
 UI.disableButtons = () => {
@@ -33,14 +34,13 @@ UI.resumeMarcador = ({
     nivelSeleccionado,
 }) => {
     document.getElementById('preguntasAcertadas').textContent = preguntasAcertadas || 0;
-
     document.getElementById('preguntasRespondidas').textContent = preguntasRespondidas || 0;
-
     document.getElementById('logrosConseguidos').textContent = logrosConseguidos || 0;
-
     document.getElementById('logrosDisponibles').textContent = totalCategories;
-
     document.getElementById('btnNivel').textContent = (nivelSeleccionado || 'RANDOM').toUpperCase();
+    document.getElementById('btnGameMode').textContent = DB.data.isFastMode
+        ? 'FAST MODE'
+        : 'NORMAL MODE';
 };
 
 UI.updateMarcador = (acertada, isLogro) => {
@@ -118,11 +118,7 @@ UI.showVictory = async () => {
             },
         });
         setTimeout(() => {
-            UI.resetMarcador();
-            // eslint-disable-next-line no-undef
-            Controller.initGame();
-            // eslint-disable-next-line no-undef
-            Controller.renderQuestion();
+            Controller.restartGame();
         }, 2000);
     };
     notifier.confirm(
@@ -144,5 +140,9 @@ UI.showVictory = async () => {
 };
 
 UI.btnNivel = document.getElementById('btnNivel');
-// eslint-disable-next-line no-undef
+UI.btnReset = document.getElementById('btnGameReset');
+UI.btnMode = document.getElementById('btnGameMode');
+
 UI.btnNivel.addEventListener('click', Game.setNextLevel);
+UI.btnReset.addEventListener('click', Controller.restartGame);
+UI.btnMode.addEventListener('click', Game.setGameMode);

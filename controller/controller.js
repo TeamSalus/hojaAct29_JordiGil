@@ -24,11 +24,18 @@ Controller.initUser = async (difficulty = 'easy') => {
 Controller.tokenReset = async () => {
     User.setUserToken(await API.getToken());
 };
+// prettier-ignore
+Controller.getNextCategory = () => {
+    const randomCat = Math.round(Math.random() * ((DB.data.unlockedCategories).length - 1));
+    return DB.data.unlockedCategories[randomCat].id;
+}
 
 Controller.getNextQuestion = async (difficulty) => {
+    const category = DB.data.isFastMode ? Controller.getNextCategory() : '';
     const { response_code: errorAPI, results: pregunta } = await API.getQuestions(
         difficulty,
-        User.getUserToken('token')
+        User.getUserToken('token'),
+        category
     );
 
     if (errorAPI === 3 || errorAPI === 4) {
@@ -42,6 +49,8 @@ Controller.getNextQuestion = async (difficulty) => {
 
 Controller.restartGame = () => {
     Game.resetGame();
+    Controller.initGame();
+    Controller.initUser();
     Controller.renderQuestion();
 };
 
@@ -79,7 +88,6 @@ Controller.isLogroUnlocked = () => {
 
     if (listCategories.length === 1) {
         UI.showVictory();
-        Game.resetGame();
         return {
             gameOver: true,
         };

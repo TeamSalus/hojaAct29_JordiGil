@@ -8,10 +8,10 @@ API.getToken = async () => {
 };
 
 // eslint-disable-next-line no-undef
-API.getQuestions = async (difficulty = Game.getDefaultDifficulty(), token = '') =>
+API.getQuestions = async (difficulty = Game.getDefaultDifficulty(), token = '', category) =>
     (
         await fetch(
-            `https://opentdb.com/api.php?amount=1&difficulty=${difficulty}&token=${token}&encode=base64`
+            `https://opentdb.com/api.php?amount=1&difficulty=${difficulty}&token=${token}&encode=base64&category=${category}`
         )
     ).json();
 

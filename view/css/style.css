@@ -1,108 +1,135 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&display=swap');
 
 * {
-  margin: 0;
-  padding: 0;
-  font-family: 'Montserrat', 'sans-serif';
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', 'sans-serif';
+    box-sizing: border-box;
 }
 body {
-  background: linear-gradient(#7a66b0, rgb(50, 42, 73));
-  color: white;
-  /* min-height: 100vh; */
-  margin: 0 1em;
-  text-align: center;
+    background: linear-gradient(#7a66b0, rgb(50, 42, 73));
+    color: white;
+    /* min-height: 100vh; */
+    margin: 0 1em;
+    text-align: center;
 }
 
 .main {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
-  max-width: 500px;
-  margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    max-width: 500px;
+    margin: auto;
 }
 
 h1 {
-  margin-top: 1em;
-  text-align: center;
-  color: whitesmoke;
+    margin-top: 1em;
+    text-align: center;
+    color: whitesmoke;
+}
+
+.main__botones {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 1em;
+}
+
+.botones__reset,
+.botones__mode {
+    color: whitesmoke;
+    border: none;
+    padding: 0.2em 0.5em;
+    font-weight: 600;
+    outline: none;
+    width: 10em;
+}
+
+.botones__reset {
+    background-color: crimson;
+}
+
+.botones__mode {
+    background-color: seagreen;
 }
 
 .puntuacion {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  text-align: center;
-  margin: 2em 0;
-  color: whitesmoke;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    margin: 1em 0;
+    color: whitesmoke;
+    font-weight: 600;
 }
 
 .puntuacion__nivel {
-  color: whitesmoke;
-  background-color: darkmagenta;
-  border: none;
-  padding: 0.5em;
-  width: 10em;
+    color: whitesmoke;
+    background-color: darkmagenta;
+    border: none;
+    padding: 0.5em;
+    width: 10em;
+    font-weight: 600;
+    outline: none;
 }
 
 .preguntas {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .pregunta {
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
 }
 
 .pregunta__categoria {
-  text-align: center;
-  background-color: darkcyan;
-  font-size: 1rem;
-  padding: 0.1em 0;
+    text-align: center;
+    background-color: darkcyan;
+    font-size: 1rem;
+    padding: 0.1em 0;
 }
 
 .pregunta__titulo {
-  background-color: whitesmoke;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  flex: 1;
+    background-color: whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex: 1;
 }
 .pregunta__titulo__nombre {
-  background-color: whitesmoke;
-  color: grey;
-  text-align: center;
-  font-weight: 700;
-  font-size: 1.25em;
-  margin: auto;
-  padding: 1em 0.5em;
+    background-color: whitesmoke;
+    color: grey;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.25em;
+    margin: auto;
+    padding: 1em 0.5em;
 }
 
 .respuestas {
-  flex: 1;
+    flex: 1;
 }
 
 .btnAnswer {
-  font-size: 1rem;
-  width: 100%;
-  padding: 0.5em;
+    font-size: 1rem;
+    width: 100%;
+    padding: 0.5em;
 }
 .disableButtons {
-  cursor: none;
+    cursor: none;
 }
 .respuestas__multiples,
 .respuestas__trueFalse {
-  display: flex;
-  justify-content: space-evenly;
-  align-content: center;
-  flex-direction: column;
-  height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    flex-direction: column;
+    height: 100%;
 }
 .copy {
-  font-size: 0.5rem;
-  margin-left: auto;
+    font-size: 0.5rem;
+    margin-left: auto;
 }

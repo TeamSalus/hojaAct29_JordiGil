@@ -14,6 +14,10 @@
     <body>
         <div class="main">
             <h1>Open Trivia Game</h1>
+            <div class="main__botones">
+                <button id="btnGameReset" class="botones__reset">RESET GAME</button>
+                <button id="btnGameMode" class="botones__mode"></button>
+            </div>
             <div class="puntuacion">
                 <div class="puntuacion__preguntas">
                     <p class="puntuacion__numeroPregunta">
@@ -22,7 +26,6 @@
                     </p>
                     <p class="puntuacion__numeroPregunta">Acertadas</p>
                 </div>
-
                 <button id="btnNivel" class="puntuacion__nivel">EASY</button>
                 <div class="puntuacion__logros">
                     <p class="puntuacion__categoria">
@@ -40,7 +43,7 @@
         <script src="./view/plugins/awesome.js"></script>
         <script src="./controller/controller.js"></script>
         <script src="./model/game.js"></script>
-        <script src="./view/UI.js"></script>
+        <script src="./view/ui.js"></script>
         <script src="./model/api.js"></script>
         <script src="./model/user.js"></script>
         <script src="./model/util.js"></script>

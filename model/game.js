@@ -22,6 +22,7 @@ Game.setTotalCategories = (totalCategories) => {
 
 Game.setCategories = (categories) => {
     DB.data.unlockedCategories = categories;
+    DB.saveDB();
 };
 
 Game.getSavedCategories = () => DB.data.unlockedCategories;
@@ -51,7 +52,7 @@ Game.setNextLevel = () => {
 };
 
 Game.setCorrectAnswer = (correctAnswer) => {
-    DB.data.correctAnswer = atob(correctAnswer);
+    DB.data.correctAnswer = Util.b64DecodeUnicode(correctAnswer);
 };
 
 Game.getCorrectAnswer = () => DB.data.correctAnswer;
@@ -69,12 +70,20 @@ Game.saveProgress = () => {
 
 Game.resetGame = () => {
     Object.keys(DB.data).map((key) => {
-        if (key !== 'gameVersion') {
+        if (key !== 'gameVersion' && key !== 'token' && key !== 'isFastMode') {
             DB.data[key] = null;
         }
         DB.saveDB();
         return true;
     });
+    UI.resetMarcador();
+};
+
+Game.setGameMode = ({ target }) => {
+    DB.data.isFastMode = !DB.data.isFastMode;
+    DB.saveDB();
+    // eslint-disable-next-line no-param-reassign
+    target.textContent = DB.data.isFastMode ? 'FAST MODE' : 'NORMAL MODE';
 };
 
 Game.getProgress = () => {

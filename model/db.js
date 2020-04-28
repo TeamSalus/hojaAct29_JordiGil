@@ -2,6 +2,7 @@ const DB = {};
 
 DB.data = {
     gameVersion: 'v2',
+    isFastMode: true,
     token: '',
     isGameRunning: false,
     gameDifficulty: null,
