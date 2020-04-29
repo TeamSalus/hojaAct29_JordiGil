@@ -132,4 +132,9 @@ h1 {
 .copy {
     font-size: 0.5rem;
     margin-left: auto;
+    color: white;
+}
+
+.colorIco {
+    color: #f0e21e;
 }
