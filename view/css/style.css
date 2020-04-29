@@ -8,8 +8,6 @@
 }
 body {
     background: linear-gradient(#7a66b0, rgb(50, 42, 73));
-    /* color: white; */
-    /* min-height: 100vh; */
     margin: 0 1em;
     text-align: center;
 }
@@ -63,6 +61,18 @@ h1 {
     font-weight: 600;
 }
 
+.puntuacion__logros, .puntuacion__preguntas {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.puntuacion__preguntas__icono{
+    color: #ffd17c;
+}
+.puntuacion__logros__icono {
+    color: #ffad2f;
+}
+
 .puntuacion__nivel {
     color: whitesmoke;
     background-color: darkmagenta;
@@ -90,6 +100,8 @@ h1 {
     background-color: darkcyan;
     font-size: 1rem;
     padding: 0.1em 0;
+    color: whitesmoke;
+    font-weight: 500;
 }
 
 .pregunta__titulo {
@@ -115,8 +127,10 @@ h1 {
 
 .btnAnswer {
     font-size: 1rem;
+    font-weight: 600;
     width: 100%;
     padding: 0.5em;
+    color: grey;
 }
 .disableButtons {
     cursor: none;
@@ -132,9 +146,7 @@ h1 {
 .copy {
     font-size: 0.5rem;
     margin-left: auto;
-    color: white;
+    color: whitesmoke;
 }
 
-.colorIco {
-    color: #f0e21e;
-}
+
