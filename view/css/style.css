@@ -41,6 +41,7 @@ h1 {
     font-weight: 600;
     outline: none;
     width: 10em;
+    cursor: pointer;
 }
 
 .botones__reset {
@@ -81,6 +82,7 @@ h1 {
     width: 10em;
     font-weight: 600;
     outline: none;
+    cursor: pointer;
 }
 
 .preguntas {
@@ -113,7 +115,7 @@ h1 {
 }
 .pregunta__titulo__nombre {
     background-color: whitesmoke;
-    color: grey;
+    color: #656565;
     text-align: center;
     font-weight: 700;
     font-size: 1.25em;
@@ -130,7 +132,8 @@ h1 {
     font-weight: 600;
     width: 100%;
     padding: 0.5em;
-    color: grey;
+    color: #656565;
+    cursor: pointer;
 }
 .disableButtons {
     cursor: none;

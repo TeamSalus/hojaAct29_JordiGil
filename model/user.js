@@ -14,3 +14,7 @@ User.setUserToken = (token) => {
 };
 
 User.getUserToken = () => DB.data.token;
+
+User.resetToken = () => {
+    DB.data.token = null;
+}

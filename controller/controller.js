@@ -47,10 +47,10 @@ Controller.getNextQuestion = async (difficulty) => {
     return false;
 };
 
-Controller.restartGame = () => {
+Controller.restartGame = async () => {
     Game.resetGame();
-    Controller.initGame();
-    Controller.initUser();
+    await Controller.initGame();
+    await Controller.initUser();
     Controller.renderQuestion();
 };
 
@@ -64,7 +64,10 @@ Controller.renderQuestion = async () => {
     /* Si vuele a no ver pregunta significaría que hay algún error que no he controlado y para evitar
         un bucle infinito y evitar baneos del servidor, reseteamos el juego.
      */
-    if (!pregunta) Controller.restartGame();
+    if (!pregunta) {
+        User.resetToken();
+        Controller.restartGame();
+    }
     else {
         pregunta = Util.preparaPreguntaParaVista(pregunta);
         UI.showQuestion(pregunta);
@@ -104,21 +107,21 @@ Controller.isLogroUnlocked = () => {
 Controller.isAnswer = async ({ target }) => {
     UI.disableButtons();
     const respuestaCorrecta = Game.getCorrectAnswer();
-
     const isAcertada = target.innerHTML === respuestaCorrecta;
-
     const { gameOver, isLogro, categoria } = isAcertada ? Controller.isLogroUnlocked() : false;
+
+    UI.updateMarcador(isAcertada, isLogro);
 
     if (gameOver) return;
 
-    UI.updateMarcador(isAcertada, isLogro);
     Game.saveProgress();
+
     const preload = Controller.preloadQuestion(User.getUserDifficulty());
 
     const notificacion = isAcertada
         ? UI.showSuccess(isLogro, categoria)
         : UI.showFail(respuestaCorrecta);
-    const nextQuestion = [await preload, await notificacion][0];
 
+    const nextQuestion = [await preload, await notificacion][0];
     UI.showQuestion(nextQuestion);
 };

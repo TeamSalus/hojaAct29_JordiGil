@@ -73,7 +73,7 @@ Game.resetGame = () => {
         if (key !== 'gameVersion' && key !== 'token' && key !== 'isFastMode') {
             DB.data[key] = null;
         }
-        DB.saveDB();
+         DB.saveDB();
         return true;
     });
     UI.resetMarcador();
