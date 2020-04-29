@@ -134,10 +134,6 @@ h1 {
     margin-left: auto;
 }
 
-.ico_cabecera {
-    margin-top: 0.5rem;
-    padding: 5px;
-    background-color: white;
-    border: 1px solid #28213b;
-    border-radius: 50%;
+.colorIco {
+    color: #f0e21e;
 }
